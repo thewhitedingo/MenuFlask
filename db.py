@@ -13,6 +13,14 @@ class Restaurant(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+    
+
 class MenuItem(Base):
     __tablename__ = 'item'
 
@@ -23,6 +31,18 @@ class MenuItem(Base):
     course = Column(String(250))
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
+
+    #add a serialize function to send objects as JSON
+    @property
+    def serialize(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'id': self.id,
+            'price': self.price,
+            'course': self.course,
+            'restaurant_id': self. restaurant_id
+        }
 
 engine = create_engine('sqlite:///restaurantmenu.db')
 
