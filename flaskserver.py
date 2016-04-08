@@ -59,6 +59,43 @@ def menus(restaurant_id):
 	item_list = menu_items(restaurant_id)
 	return render_template('restaurant_menu.html', restaurant = rstr, menu = item_list)
 
+@app.route('/restaurant/add_restaurant/', methods=['GET', 'POST'])
+def add_restaurant():
+	if request.method == 'POST':
+		new_rstr = Restaurant(name = request.form['name'])
+		s.add(new_rstr)
+		s.commit()
+		return redirect(url_for('list'))
+	else:
+		return render_template('add_restaurant.html')
+
+# form to edit a rstr
+@app.route('/restaurant/<int:restaurant_id>/edit_restaurant/', methods=['GET', 'POST'])
+def edit_restaurant(restaurant_id):
+	rstr = restaurant(restaurant_id)
+	if request.method == 'POST':
+		if request.form['name']:
+			rstr.name = request.form['name']
+		s.add(rstr)
+		s.commit()
+		return redirect(url_for('list'))
+	else:
+		return render_template('edit_restaurant.html', restaurant_id = restaurant_id, rstr = rstr)
+
+# route to delete a rstr
+@app.route('/restaurant/<int:restaurant_id>/delete_restaurant/', methods=['GET', 'POST'])
+def delete_restaurant(restaurant_id):
+	rstr = restaurant(restaurant_id)
+	item_list = menu_items(restaurant_id)
+	if request.method == 'POST':
+		for item in item_list:
+			s.delete(item)
+		s.delete(rstr)
+		s.commit()
+		return redirect(url_for('list'))
+	else:
+		return render_template('delete_restaurant.html', restaurant_id = restaurant_id, rstr = rstr)
+
 # form to add a restaurant item to the menu
 @app.route('/restaurant/<int:restaurant_id>/new_item/', methods=['GET', 'POST'])
 def add_item(restaurant_id):
@@ -67,7 +104,6 @@ def add_item(restaurant_id):
 			price = request.form['price'], restaurant_id = restaurant_id)
 		s.add(new_item)
 		s.commit()
-		flash("New item has been added")
 		return redirect(url_for('menus', restaurant_id = restaurant_id))
 	else:
 		return render_template('add_item.html', restaurant_id = restaurant_id)

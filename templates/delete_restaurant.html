@@ -5,10 +5,10 @@
 <body>
 	<div class='pane'>
 		<div class="deleteItem">
-			<h1>Are you sure you want to delete {{ item.name }}?</h1>
-			<form action='{{ url_for('delete_item', restaurant_id = restaurant_id, menu_id = item.id) }}' method='post'>
+			<h1>Are you sure you want to delete {{ rstr.name }} and all it's menu items?</h1>
+			<form action='{{ url_for('delete_restaurant', restaurant_id = restaurant_id) }}' method='post'>
 				<input type='submit' value='Yes'>
-				<a class='cancel' href='{{ url_for('menus', restaurant_id = restaurant_id) }}'>
+				<a class='cancel' href='{{ url_for('list') }}'>
 					<button type='button'>No</button>
 				</a>
 			</form>
