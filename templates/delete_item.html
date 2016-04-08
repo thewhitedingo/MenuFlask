@@ -4,12 +4,12 @@
 </head>
 <body>
 	<div class='pane'>
-		<div class="deleteItem">
-			<h1>Are you sure you want to delete {{ item.name }}?</h1>
-			<form action='{{ url_for('delete_item', restaurant_id = restaurant_id, menu_id = item.id) }}' method='post'>
-				<input type='submit' value='Yes'>
-				<a class='cancel' href='{{ url_for('menus', restaurant_id = restaurant_id) }}'>
-					<button type='button'>No</button>
+		<div>
+			<h1 class= 'header'>Are you sure you want to delete {{ item.name }}?</h1>
+			<form class='rstr' action='{{ url_for('delete_item', restaurant_id = restaurant_id, menu_id = item.id) }}' method='post'>
+				<input class='delete' type='submit' value='Yes'
+				><a class='cancel' href='{{ url_for('menus', restaurant_id = restaurant_id) }}'
+					><button class='delete' type='button'>No</button>
 				</a>
 			</form>
 		</div>

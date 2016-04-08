@@ -30,7 +30,6 @@ input[type=submit], a, button {
 	text-decoration: none;
 	background-color: #1e1e1e;
 	color: #fff;
-	border-radius: 15px;
 	padding: 10px 7px;
 	overflow: none;
 }
@@ -46,16 +45,20 @@ input[type=submit], button {
 	border: none;
 }
 
+.back {
+	position: relative;
+	text-align: center;
+}
+
 .cancel {
 	padding: 0px;
 }
 
 .pane {
-	position:absolute; 
+	position: absolute; 
 	left: 20%; 
 	width: 50%;
-	border: 2px solid;
-    border-radius: 25px; 
+	border: 2px solid; 
     padding: 5px; 
     margin: 5px; 
     border-color: #999999; 
@@ -66,16 +69,21 @@ input[type=submit], button {
 	font-size: 1.25em;
 }
 
-.rstr {
+.rstr, .deleteItem {
 	position: relative;
 	text-align: center;
 	padding: 5px;
 	overflow: none;
 }
 
+.delete {
+	font-size: 23px;
+}
+
 .add {
 	position: relative;
 	text-align: center;
+	margin-top: 40px
 }
 
 .header {
