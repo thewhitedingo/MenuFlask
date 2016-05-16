@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<head>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+{% extends 'main.html' %}
+{% block content %}
+
+
 <div class='pane'>
+ 	{% include 'header.html' %} 
 	<h1 class='header'>Add an Item</h1>
 	<form class='rstr' action='{{ url_for('add_item', restaurant_id = restaurant_id) }}' method='post'>
 		<p>Name</p>
@@ -19,4 +19,4 @@
 		</p>
 	</form>
 </div>
-</body>
+{% endblock %}

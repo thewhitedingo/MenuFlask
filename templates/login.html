@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+</head>
+<body>
+<div class='pane'>
+
+	<h1 class='header'>Please Login to View the Restaurants</h1>
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+		<ul>
+			{% for message in messages %}
+				<li> <strong> {{ message }} </strong> </li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	{% endwith %}
+	<div id='signIn' class='rstr'>
+		<span class="g-signin"
+			data-scope="openid email"
+			data-clientid="client id goes here"
+			data-redirecturi="postmessage"
+			data-accesstype="offline"
+			data-cookiepolicy="single_host_origin"
+			data-callback="signInCallback"
+			data-approvalprompt="force">
+		</span>
+	</div>
+	<div id='result'></div>
+</div>
+
+<script type="text/javascript">
+	function signInCallback(authResult) {
+		if (authResult['code']) {
+			//hide the sign in button now that it's authorized
+			$('#signIn').attr('style', 'display: none');
+			//Send the one-time-use code to the server, if it responds, write a 'login succesful' message to the web page and redirect back to the main page
+			$.ajax({
+				type: 'POST',
+				url: '/gconnect?state={{STATE}}',
+				processData: false,
+				data: authResult['code'],
+				contentType: 'application/octet-stream; charset=utf-8',
+				success: function (result) {
+					if (result) {
+						$('#result').html('Login Succesful!</br>' + result + '</br>Redirecting...')
+						setTimeout(function () {
+							window.location.href = '/restaurant';
+						}, 2000);
+					}
+					else if (authResult['error']) {
+						console.log('There has been an error, blame Google, not me: ' + authResult['error'])
+					}
+					else {
+						$('#result').html('Failed to make a connection, Check your end, it\'s probably your fault.');
+					}
+				}
+			});
+		}
+	}
+</script>
+</body>

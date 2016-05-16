@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<head>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+{% extends 'main.html' %}
+{% block content %}
+
 <div class='pane'>
+ 	{% include 'header.html' %} 
 		<h1 class='header'>{{ restaurant.name }}</h1>
-		<p class='add'
-			><a href='{{ url_for('add_item', restaurant_id = restaurant.id) }}'> Add Item</a
-			><a class='back' href="{{ url_for('list') }}">Back</a
-		></p>
 		{% if menu %}
 			{% for item in menu %}
 				<div class='list'>
@@ -24,5 +19,8 @@
 		{% else %}
 				<p><strong>There's nothing on the menu! Looks like you'll go hungry if you come here.</strong></p>
 		{% endif %}
+		<p class='add'
+			><a href='{{ url_for('add_item', restaurant_id = restaurant.id) }}'> Add Item</a
+		></p>
 </div>
-</body>
+{% endblock %}

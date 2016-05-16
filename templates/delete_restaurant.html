@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<head>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-	<div class='pane'>
+{% extends 'main.html' %}
+{% block content %}
+
+
+<div class='pane'>
+ 	{% include 'header.html' %} 
 		<div class="deleteItem">
 			<h1>Are you sure you want to delete {{ rstr.name }} and all it's menu items?</h1>
 			<form class='rstr' action='{{ url_for('delete_restaurant', restaurant_id = restaurant_id) }}' method='post'>
@@ -14,4 +14,4 @@
 			</form>
 		</div>
 	</div>
-</body>
+{% endblock %}
