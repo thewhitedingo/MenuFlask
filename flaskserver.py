@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from flask import Flask, render_template, url_for, jsonify, request, redirect, flash
 from flask import session as login_session
 
-from db import engine, Base, Restaurant, MenuItem
+from db import engine, Base, Restaurant, MenuItem, User
 import random, string
 # needed libraries for authentication and security
 from oauth2client.client import flow_from_clientsecrets
@@ -125,15 +125,25 @@ def gconnect():
 	login_session['username'] = data['name']
 	login_session['picture'] = data['picture']
 	login_session['email'] = data['email']
-
-	output = ''
-	output += '<h1>Welcome, '
-	output += login_session['username']
-	output += '!</h1>'
-	output += '<img src="'
-	output += login_session['picture']
-	output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-	return output
+	if login_session['email'] == get_user(login_session['email']).email:
+		output = ''
+		output += '<h1>Welcome back, '
+		output += login_session['username']
+		output += '!</h1>'
+		output += '<img src="'
+		output += login_session['picture']
+		output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+		return output
+	else:
+		create_user(login_session)
+		output = ''
+		output += '<h1>Thank you for becoming a user, '
+		output += login_session['username']
+		output += '!</h1>'
+		output += '<img src="'
+		output += login_session['picture']
+		output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+		return output
 
 @app.route('/gdisconnect')
 def gdisconnect():
@@ -238,7 +248,7 @@ def add_item(restaurant_id):
 		return redirect('/login/')
 	if request.method == 'POST':
 		new_item = MenuItem(name = request.form['name'], description = request.form['description'],
-			price = request.form['price'], restaurant_id = restaurant_id)
+			price = request.form['price'], restaurant_id = restaurant_id, user_id = login_session['user_id'])
 		s.add(new_item)
 		s.commit()
 		return redirect(url_for('menus', restaurant_id = restaurant_id))
@@ -278,6 +288,20 @@ def delete_item(restaurant_id, menu_id):
 		return redirect(url_for('menus', restaurant_id = restaurant_id))
 	else:
 		return render_template('delete_item.html', restaurant_id = restaurant_id, menu_id = menu_id, item = item)
+
+def get_user(email):
+	try:
+		user = s.query(User).filter_by(email = email).first()
+		return user
+	except:
+		None
+
+# create a new user as a ne login session is created
+def create_user(login_session):
+	new_user = User(name = login_session['username'], email = login_session['email'], picture = login_session['picture'])
+	s.add(new_user)
+	s.commit()
+
 
 # run the server only if it's not an imported module
 if __name__ == '__main__':
